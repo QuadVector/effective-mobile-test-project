@@ -9,8 +9,11 @@ use Illuminate\Http\Request;
 
 class TasksController extends Controller
 {
+
     /**
-     * Получить список всех задач (GET)
+     * Get all tasks (GET)
+     * 
+     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
     public function index()
     {
@@ -18,9 +21,13 @@ class TasksController extends Controller
     }
 
     /**
-     * Создать новую задачу (POST)
+     * Create new task (POST)
+     * 
+     * @param \Illuminate\Http\Request $request
+     * 
+     * @return \Illuminate\Http\JsonResponse|TasksResource
      */
-    public function store(Request $request)
+    public function store(Request $request): \Illuminate\Http\JsonResponse|TasksResource
     {
         $validatedData = $request->validate([
             "title" => ["required", "string", "max:100"],
@@ -55,10 +62,15 @@ class TasksController extends Controller
         }
     }
 
+
     /**
-     * Отобразить информацию по текущий задаче (GET)
+     * Get the specified resource (GET)
+     * 
+     * @param string $id
+     * 
+     * @return \Illuminate\Http\JsonResponse|TasksResource
      */
-    public function show(string $id)
+    public function show(string $id): \Illuminate\Http\JsonResponse|TasksResource
     {
         $taskInfo = Tasks::where("id", $id)->first();
 
@@ -71,10 +83,15 @@ class TasksController extends Controller
         return new TasksResource($taskInfo);
     }
 
+
     /**
-     * Обновить информацию по конкретной задаче (PUT)
+     * Update the specified resource in storage (PUT/PATCH)
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  string  $id
+     * @return \Illuminate\Http\JsonResponse|TasksResource
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, string $id): \Illuminate\Http\JsonResponse|TasksResource
     {
         $taskInfo = Tasks::where("id", $id)->first();
         if (!$taskInfo) {
@@ -95,10 +112,14 @@ class TasksController extends Controller
         }
     }
 
+
     /**
-     * Удалить конкретную задачу (DELETE)
+     * Remove the specified resource from storage (DELETE)
+     *
+     * @param  string  $id
+     * @return \Illuminate\Http\JsonResponse
      */
-    public function destroy(string $id)
+    public function destroy(string $id): \Illuminate\Http\JsonResponse|TasksResource
     {
         $taskInfo = Tasks::where("id", $id)->first();
         if (!$taskInfo) {
